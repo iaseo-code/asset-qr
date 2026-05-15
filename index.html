@@ -126,8 +126,20 @@ sc.src=API+"?id="+encodeURIComponent(id)+"&callback="+cb;
 sc.onerror=function(){document.getElementById("ra").innerHTML='<div class="err"><div style="font-size:44px;margin-bottom:12px">⚠️</div><div style="font-size:15px;font-weight:700;color:#dc2626">네트워크 오류</div><div style="font-size:12px;color:#b91c1c">API 연결을 확인해 주세요</div></div>'};
 document.body.appendChild(sc)}
 document.getElementById("sf").addEventListener("submit",function(ev){ev.preventDefault();var id=document.getElementById("si").value.trim();if(id)lookup(id)});
-var p=new URLSearchParams(window.location.search),ii=p.get("id");
-if(ii){lookup(ii)}else{document.getElementById("ra").innerHTML='<div class="empty"><div style="font-size:48px;margin-bottom:16px">📋</div><div style="font-size:16px;font-weight:700;margin-bottom:6px">자산 관리번호를 입력하세요</div><div style="font-size:13px;color:#6b7280">QR 코드 스캔 또는 직접 입력으로 조회</div></div>'}
+var href = window.location.href;
+var ii = null;
+
+// 스마트폰 환경을 고려하여 주소 텍스트 전체에서 강제로 id 값만 잘라내기
+if (href.indexOf("?id=") > -1) {
+    ii = href.split("?id=")[1].split("&")[0];
+    ii = decodeURIComponent(ii).split("#")[0]; // 모바일 브라우저가 임의로 붙이는 '#' 기호 제거
+}
+
+if (ii) {
+    lookup(ii);
+} else {
+    document.getElementById("ra").innerHTML='<div class="empty"><div style="font-size:48px;margin-bottom:16px">📋</div><div style="font-size:16px;font-weight:700;margin-bottom:6px">자산 관리번호를 입력하세요</div><div style="font-size:13px;color:#6b7280">QR 코드 스캔 또는 직접 입력으로 조회</div></div>';
+}
 </script>
 </body>
 </html>
