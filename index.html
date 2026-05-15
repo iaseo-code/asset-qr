@@ -53,6 +53,7 @@ body{font-family:"Pretendard",-apple-system,sans-serif;background:#f4f4f8;color:
 <div id="ra"></div>
 <div class="foot">QR 코드를 스캔하면 자동으로 자산 정보가 조회됩니다</div>
 </div>
+
 <script>
 var API="https://script.google.com/macros/s/AKfycbwLiEY0-NadWWghpHVZyHk5qmK0Rwl9I7f_bpgXJJIs1YR4MjdjvCsxWt3qBw_YRreSJw/exec";
 var IC={"아이맥(일체형)":"🖥","모니터":"🖥","노트북":"💻","데스크탑":"🖳","맥북":"💻","맥스튜디오":"⬛","맥디스플레이":"🖥","외장하드":"💾","핸드폰":"📱","태블릿":"📋","카메라":"📷"};
@@ -74,7 +75,6 @@ function lookup(id){
         }else{
             var s=d["상태"]||"알 수 없음",c=d["카테고리"]||"",ic=IC[c]||"📦";
             
-            // 구매일 변환 로직 (정상 작동 확인됨)
             var rawDate = d["구매일"];
             var formattedDate = "—";
             if (rawDate) {
@@ -91,16 +91,16 @@ function lookup(id){
             var r="";
             for(var i=0;i<fs.length;i++){
                 var f=fs[i],v=f[1]?e(String(f[1])):"—",cl="rv"+(f[3]?" m":"")+(!f[1]?" e":""),sb=f[2]&&!f[3]?'<div class="rs">'+e(String(f[2]))+"</div>":"";
-                r+='<div class="row"><span class="rl">'+f[0]+'</span><div style="text-align:right"><span class="'+cl+'">'+v+"</span>"+sb+"</div></div>'
+                r+='<div class="row"><span class="rl">'+f[0]+'</span><div style="text-align:right"><span class="'+cl+'">'+v+"</span>"+sb+"</div></div>';
             }
-            document.getElementById("ra").innerHTML='<div class="card"><div class="card-hd"><span class="badge s-'+s+'">'+e(s)+'</span><div class="card-lb">자산 관리번호</div><div class="card-id">'+e(d["관리번호"])+'</div><div class="card-cat"><span style="font-size:20px">'+ic+"</span> "+e(c)+"</div></div><div class=\"card-bd\">"+r+"</div></div>'
+            document.getElementById("ra").innerHTML='<div class="card"><div class="card-hd"><span class="badge s-'+s+'">'+e(s)+'</span><div class="card-lb">자산 관리번호</div><div class="card-id">'+e(d["관리번호"])+'</div><div class="card-cat"><span style="font-size:20px">'+ic+"</span> "+e(c)+"</div></div><div class="card-bd">'+r+'</div></div>';
         }
     };
     
     var sc=document.createElement("script");
     sc.src=API+"?id="+encodeURIComponent(id)+"&callback="+cb;
     sc.onerror=function(){
-        document.getElementById("ra").innerHTML='<div class="err"><div style="font-size:44px;margin-bottom:12px">⚠️</div><div style="font-size:15px;font-weight:700;color:#dc2626">네트워크 오류</div><div style="font-size:12px;color:#b91c1c">API 연결을 확인해 주세요</div></div>'
+        document.getElementById("ra").innerHTML='<div class="err"><div style="font-size:44px;margin-bottom:12px">⚠️</div><div style="font-size:15px;font-weight:700;color:#dc2626">네트워크 오류</div><div style="font-size:12px;color:#b91c1c">API 연결을 확인해 주세요</div></div>';
     };
     document.body.appendChild(sc);
 }
@@ -108,30 +108,39 @@ function lookup(id){
 document.getElementById("sf").addEventListener("submit",function(ev){
     ev.preventDefault();
     var id=document.getElementById("si").value.trim();
-    if(id)lookup(id)
+    if(id) lookup(id);
 });
 
-// 즉시 실행되도록 변경하여 무조건 값을 잡도록 수정
-(function() {
+// URL에서 ID를 강제로 뽑아내는 무적의 로직
+function initApp() {
     var ii = null;
+    var href = window.location.href;
+    
+    // 1순위: URLSearchParams로 시도
     try {
-        // 1차 시도: 기본 URL 파라미터 추출
         var p = new URLSearchParams(window.location.search);
-        ii = p.get("id");
-
-        // 2차 시도: 모바일 기호 파괴 및 강제 추출 (1차가 실패했을 경우)
-        if (!ii && window.location.href.indexOf("id=") > -1) {
-            var rawId = window.location.href.split("id=")[1].split("&")[0].split("#")[0];
-            if (rawId) ii = decodeURIComponent(rawId).replace(/\/$/, "").trim();
-        }
+        if (p.has("id")) ii = p.get("id");
     } catch(e) {}
 
+    // 2순위: 텍스트 자체를 잘라서 추출 (1순위 실패 시)
+    if (!ii && href.indexOf("id=") !== -1) {
+        var temp = href.split("id=")[1];
+        temp = temp.split("&")[0];
+        temp = temp.split("#")[0];
+        temp = temp.replace(/\/$/, ""); 
+        ii = decodeURIComponent(temp).trim();
+    }
+
+    // 아이디를 찾았다면 검색창에 입력하고 조회 시작
     if (ii) {
         lookup(ii);
     } else {
         document.getElementById("ra").innerHTML='<div class="empty"><div style="font-size:48px;margin-bottom:16px">📋</div><div style="font-size:16px;font-weight:700;margin-bottom:6px">자산 관리번호를 입력하세요</div><div style="font-size:13px;color:#6b7280">QR 코드 스캔 또는 직접 입력으로 조회</div></div>';
     }
-})();
+}
+
+// 화면이 준비되면 즉시 실행
+initApp();
 </script>
 </body>
 </html>
