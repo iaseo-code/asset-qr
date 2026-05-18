@@ -16,10 +16,10 @@ body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,sans-serif;backgr
 .ct{max-width:500px;margin:0 auto;padding:16px}
 .sb{display:flex;gap:8px;margin-bottom:20px}
 .si{flex:1;padding:16px;border-radius:14px;border:none;font-size:16px;font-family:"SF Mono","Fira Code",monospace;font-weight:700;text-transform:uppercase;outline:none;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.06);-webkit-appearance:none}
-.si:focus{box-shadow:0 0 0 3px rgba(0,122,255,0.3)}
+.si:focus{box-shadow:0 0 0 3px rgba(0,0,0,0.15)}
 .si::placeholder{color:#c7c7cc;font-weight:400;text-transform:none}
-.bt{padding:16px 20px;border-radius:14px;border:none;background:#007aff;color:#fff;font-weight:700;font-size:15px;cursor:pointer;font-family:"Pretendard",sans-serif;flex-shrink:0;-webkit-appearance:none}
-.bt:active{background:#0056b3}
+.bt{padding:16px 20px;border-radius:14px;border:none;background:#1c1c1e;color:#fff;font-weight:700;font-size:15px;cursor:pointer;font-family:"Pretendard",sans-serif;flex-shrink:0;-webkit-appearance:none}
+.bt:active{background:#3a3a3c}
 .cd{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.06);animation:u .35s ease}
 @keyframes u{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -43,7 +43,7 @@ body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,sans-serif;backgr
 .em{text-align:center;padding:56px 20px;animation:u .35s ease}
 .er{text-align:center;padding:44px 20px;background:#fff;border-radius:20px;box-shadow:0 2px 20px rgba(0,0,0,0.06);animation:u .35s ease}
 .ld{text-align:center;padding:48px}
-.sn{width:28px;height:28px;border-radius:50%;border:3px solid #e5e5ea;border-top-color:#007aff;margin:0 auto 14px;animation:sp .7s linear infinite}
+.sn{width:28px;height:28px;border-radius:50%;border:3px solid #e5e5ea;border-top-color:#1c1c1e;margin:0 auto 14px;animation:sp .7s linear infinite}
 .ft{text-align:center;margin-top:24px;font-size:11px;color:#c7c7cc}
 </style>
 </head>
@@ -54,7 +54,7 @@ body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,sans-serif;backgr
 </div>
 <div class="ct">
 <form class="sb" id="sf">
-<input class="si" id="si" type="text" placeholder="관리번호 입력..." autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+<input class="si" id="si" type="text" placeholder="관리번호를 입력해주세요" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
 <button class="bt" type="submit">조회</button>
 </form>
 <div id="ra"></div>
