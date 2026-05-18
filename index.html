@@ -3,144 +3,92 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>자산 정보 조회</title>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:"Pretendard",-apple-system,sans-serif;background:#f4f4f8;color:#0f0f1a;min-height:100vh}
-.header{background:#0f0f1a;padding:28px 20px 24px}
-.header-badge{font-size:10px;font-weight:600;color:rgba(255,255,255,0.35);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:8px}
-.header-title{font-size:22px;font-weight:800;color:#fff}
-.content{max-width:460px;margin:0 auto;padding:20px 16px 40px}
-.search-box{display:flex;gap:8px;margin-bottom:24px}
-.search-input{flex:1;padding:14px 16px;border-radius:12px;border:2px solid #e5e7eb;font-size:15px;font-family:"SF Mono","Fira Code",monospace;font-weight:700;text-transform:uppercase;outline:none;background:#fff}
-.search-input:focus{border-color:#0f0f1a}
-.search-btn{padding:14px 22px;border-radius:12px;border:none;background:#0f0f1a;color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:"Pretendard",sans-serif}
-.card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.05);animation:ci 0.4s ease}
-@keyframes ci{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,sans-serif;background:#f2f2f7;color:#1c1c1e;min-height:100vh;min-height:100dvh;-webkit-font-smoothing:antialiased}
+.hd{background:linear-gradient(145deg,#1c1c1e,#2c2c2e);padding:48px 20px 22px}
+.hd-b{font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.hd-t{font-size:24px;font-weight:800;color:#fff;letter-spacing:-0.5px}
+.ct{max-width:500px;margin:0 auto;padding:16px}
+.sb{display:flex;gap:8px;margin-bottom:20px}
+.si{flex:1;padding:16px;border-radius:14px;border:none;font-size:16px;font-family:"SF Mono","Fira Code",monospace;font-weight:700;text-transform:uppercase;outline:none;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.06);-webkit-appearance:none}
+.si:focus{box-shadow:0 0 0 3px rgba(0,122,255,0.3)}
+.si::placeholder{color:#c7c7cc;font-weight:400;text-transform:none}
+.bt{padding:16px 20px;border-radius:14px;border:none;background:#007aff;color:#fff;font-weight:700;font-size:15px;cursor:pointer;font-family:"Pretendard",sans-serif;flex-shrink:0;-webkit-appearance:none}
+.bt:active{background:#0056b3}
+.cd{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.06);animation:u .35s ease}
+@keyframes u{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes sp{to{transform:rotate(360deg)}}
-.card-hd{background:#0f0f1a;padding:24px 22px 20px;position:relative}
-.card-lb{font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;font-family:"SF Mono",monospace}
-.card-id{font-size:26px;font-weight:800;color:#fff;font-family:"SF Mono",monospace}
-.card-cat{margin-top:12px;color:rgba(255,255,255,0.7);font-size:14px;font-weight:500}
-.badge{display:inline-flex;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;position:absolute;top:22px;right:20px}
-.s-사용{background:#ecfdf5;color:#059669}.s-대기{background:#fffbeb;color:#d97706}.s-폐기{background:#fef2f2;color:#dc2626}.s-매각{background:#f5f3ff;color:#7c3aed}
-.card-bd{padding:4px 22px 22px}
-.row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #f3f4f6}
-.row:last-child{border-bottom:none}
-.rl{font-size:13px;color:#6b7280;font-weight:500}
-.rv{font-size:14px;color:#0f0f1a;font-weight:600;text-align:right}
+.ch{background:linear-gradient(145deg,#1c1c1e,#2c2c2e);padding:22px 20px 18px;position:relative}
+.ct2{font-size:9px;color:rgba(255,255,255,0.35);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;font-family:"SF Mono",monospace}
+.ci{font-size:28px;font-weight:800;color:#fff;font-family:"SF Mono","Fira Code",monospace;letter-spacing:-0.5px}
+.cc{margin-top:10px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.65);font-size:14px;font-weight:500}
+.bg{display:inline-flex;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:700;position:absolute;top:20px;right:16px}
+.s1{background:#d1fae5;color:#065f46}
+.s2{background:#fef3c7;color:#92400e}
+.s3{background:#fee2e2;color:#991b1b}
+.s4{background:#ede9fe;color:#5b21b6}
+.cb{padding:2px 0}
+.rw{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;border-bottom:1px solid #f5f5f7}
+.rw:last-child{border-bottom:none}
+.rl{font-size:14px;color:#8e8e93;font-weight:500;flex-shrink:0}
+.rv{font-size:15px;color:#1c1c1e;font-weight:600;text-align:right;max-width:55%;word-break:break-all}
 .rv.m{font-family:"SF Mono",monospace;font-size:12px}
-.rv.e{color:#b0b3be}
-.rs{font-size:11px;color:#9ca3af;margin-top:2px}
-.empty{text-align:center;padding:48px 20px}
-.err{text-align:center;padding:40px 20px;background:#fef2f2;border-radius:16px}
-.loading{text-align:center;padding:40px}
-.spin{width:32px;height:32px;border-radius:50%;border:3px solid #e5e7eb;border-top-color:#0f0f1a;margin:0 auto 12px;animation:sp 0.7s linear infinite}
-.foot{text-align:center;margin-top:28px;font-size:11px;color:#b0b3be}
+.rv.e{color:#c7c7cc}
+.rs{font-size:11px;color:#aeaeb2;margin-top:2px}
+.em{text-align:center;padding:56px 20px;animation:u .35s ease}
+.er{text-align:center;padding:44px 20px;background:#fff;border-radius:20px;box-shadow:0 2px 20px rgba(0,0,0,0.06);animation:u .35s ease}
+.ld{text-align:center;padding:48px}
+.sn{width:28px;height:28px;border-radius:50%;border:3px solid #e5e5ea;border-top-color:#007aff;margin:0 auto 14px;animation:sp .7s linear infinite}
+.ft{text-align:center;margin-top:24px;font-size:11px;color:#c7c7cc}
 </style>
 </head>
 <body>
-<div class="header">
-<div class="header-badge">📱 피플팀 · 자산관리</div>
-<div class="header-title">자산 정보 조회</div>
+<div class="hd">
+<div class="hd-b">📱 피플팀 · 자산관리</div>
+<div class="hd-t">자산 정보 조회</div>
 </div>
-<div class="content">
-<form class="search-box" id="sf">
-<input class="search-input" id="si" type="text" placeholder="관리번호 입력...">
-<button class="search-btn" type="submit">조회</button>
+<div class="ct">
+<form class="sb" id="sf">
+<input class="si" id="si" type="text" placeholder="관리번호 입력..." autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+<button class="bt" type="submit">조회</button>
 </form>
 <div id="ra"></div>
-<div class="foot">QR 코드를 스캔하면 자동으로 자산 정보가 조회됩니다</div>
+<div class="ft">QR 코드를 스캔하면 자동으로 자산 정보가 조회됩니다</div>
 </div>
-
 <script>
-var API="https://script.google.com/macros/s/AKfycbwLiEY0-NadWWghpHVZyHk5qmK0Rwl9I7f_bpgXJJIs1YR4MjdjvCsxWt3qBw_YRreSJw/exec";
-var IC={"아이맥(일체형)":"🖥","모니터":"🖥","노트북":"💻","데스크탑":"🖳","맥북":"💻","맥스튜디오":"⬛","맥디스플레이":"🖥","외장하드":"💾","핸드폰":"📱","태블릿":"📋","카메라":"📷"};
-
+var API="https://script.google.com/a/macros/vivawave.co.kr/s/AKfycbyQxzWNkmlwfOm5MTuUoO6dqUGMPImUITJql3Wb9eBNGbQvxe1v4TFSFvVei4n_DGfM9g/exec";
+var IC={"아이맥(일체형)":"🖥️","모니터":"🖥️","노트북":"💻","데스크탑":"🖥️","맥북":"💻","맥스튜디오":"⬛","맥디스플레이":"🖥️","외장하드":"💾","핸드폰":"📱","태블릿":"📋","카메라":"📷"};
+var SC={"사용":"s1","대기":"s2","폐기":"s3","매각":"s4"};
 function e(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
-
 function lookup(id){
-    if(!id) return;
-    document.getElementById("si").value = id;
-    document.getElementById("ra").innerHTML='<div class="loading"><div class="spin"></div><div style="font-size:13px;color:#6b7280">조회 중...</div></div>';
-    
-    var cb="_cb"+Date.now();
-    window[cb]=function(d){
-        delete window[cb];
-        if(!d||d.error==="not_found"){
-            document.getElementById("ra").innerHTML='<div class="err"><div style="font-size:44px;margin-bottom:12px">🔍</div><div style="font-size:15px;font-weight:700;color:#dc2626">"'+e(id)+'" 자산을 찾을 수 없습니다</div><div style="font-size:12px;color:#b91c1c">관리번호를 확인해 주세요</div></div>';
-        }else if(d.error){
-            document.getElementById("ra").innerHTML='<div class="err"><div style="font-size:44px;margin-bottom:12px">⚠️</div><div style="font-size:15px;font-weight:700;color:#dc2626">'+e(d.error)+'</div></div>';
-        }else{
-            var s=d["상태"]||"알 수 없음",c=d["카테고리"]||"",ic=IC[c]||"📦";
-            
-            var rawDate = d["구매일"];
-            var formattedDate = "—";
-            if (rawDate) {
-                var dt = (typeof rawDate === 'number') ? new Date((rawDate - 25569) * 86400 * 1000) : new Date(rawDate);
-                if (!isNaN(dt.getTime())) {
-                    var kstDate = new Date(dt.getTime() + (9 * 60 * 60 * 1000)); 
-                    formattedDate = kstDate.toISOString().split('T')[0];
-                } else {
-                    formattedDate = rawDate;
-                }
-            }
-
-            var fs=[["제품명",d["제품명"],d["모델명 / 사양"]],["위치",d["위치"]],["팀",d["팀"]],["사용자",d["사용자"]],["브랜드",d["제품 브랜드"]],["일련번호",d["일련번호"],0,1],["구매일",formattedDate]];
-            var r="";
-            for(var i=0;i<fs.length;i++){
-                var f=fs[i],v=f[1]?e(String(f[1])):"—",cl="rv"+(f[3]?" m":"")+(!f[1]?" e":""),sb=f[2]&&!f[3]?'<div class="rs">'+e(String(f[2]))+"</div>":"";
-                r+='<div class="row"><span class="rl">'+f[0]+'</span><div style="text-align:right"><span class="'+cl+'">'+v+"</span>"+sb+"</div></div>';
-            }
-            document.getElementById("ra").innerHTML='<div class="card"><div class="card-hd"><span class="badge s-'+s+'">'+e(s)+'</span><div class="card-lb">자산 관리번호</div><div class="card-id">'+e(d["관리번호"])+'</div><div class="card-cat"><span style="font-size:20px">'+ic+"</span> "+e(c)+"</div></div><div class="card-bd">'+r+'</div></div>';
-        }
-    };
-    
-    var sc=document.createElement("script");
-    sc.src=API+"?id="+encodeURIComponent(id)+"&callback="+cb;
-    sc.onerror=function(){
-        document.getElementById("ra").innerHTML='<div class="err"><div style="font-size:44px;margin-bottom:12px">⚠️</div><div style="font-size:15px;font-weight:700;color:#dc2626">네트워크 오류</div><div style="font-size:12px;color:#b91c1c">API 연결을 확인해 주세요</div></div>';
-    };
-    document.body.appendChild(sc);
-}
-
-document.getElementById("sf").addEventListener("submit",function(ev){
-    ev.preventDefault();
-    var id=document.getElementById("si").value.trim();
-    if(id) lookup(id);
-});
-
-// URL에서 ID를 강제로 뽑아내는 무적의 로직
-function initApp() {
-    var ii = null;
-    var href = window.location.href;
-    
-    // 1순위: URLSearchParams로 시도
-    try {
-        var p = new URLSearchParams(window.location.search);
-        if (p.has("id")) ii = p.get("id");
-    } catch(e) {}
-
-    // 2순위: 텍스트 자체를 잘라서 추출 (1순위 실패 시)
-    if (!ii && href.indexOf("id=") !== -1) {
-        var temp = href.split("id=")[1];
-        temp = temp.split("&")[0];
-        temp = temp.split("#")[0];
-        temp = temp.replace(/\/$/, ""); 
-        ii = decodeURIComponent(temp).trim();
-    }
-
-    // 아이디를 찾았다면 검색창에 입력하고 조회 시작
-    if (ii) {
-        lookup(ii);
-    } else {
-        document.getElementById("ra").innerHTML='<div class="empty"><div style="font-size:48px;margin-bottom:16px">📋</div><div style="font-size:16px;font-weight:700;margin-bottom:6px">자산 관리번호를 입력하세요</div><div style="font-size:13px;color:#6b7280">QR 코드 스캔 또는 직접 입력으로 조회</div></div>';
-    }
-}
-
-// 화면이 준비되면 즉시 실행
-initApp();
+if(!id)return;
+document.getElementById("si").value=id;
+document.getElementById("ra").innerHTML='<div class="ld"><div class="sn"></div><div style="font-size:14px;color:#8e8e93">조회 중...</div></div>';
+var cb="_cb"+Date.now();
+window[cb]=function(d){
+delete window[cb];
+if(!d||d.error==="not_found"){
+document.getElementById("ra").innerHTML='<div class="er"><div style="font-size:48px;margin-bottom:14px">🔍</div><div style="font-size:16px;font-weight:700;color:#ff3b30;margin-bottom:4px">"'+e(id)+'" 자산을 찾을 수 없습니다</div><div style="font-size:13px;color:#ff6961">관리번호를 확인해 주세요</div></div>';
+}else if(d.error){
+document.getElementById("ra").innerHTML='<div class="er"><div style="font-size:48px;margin-bottom:14px">⚠️</div><div style="font-size:16px;font-weight:700;color:#ff3b30">'+e(d.error)+'</div></div>';
+}else{
+var s=d["상태"]||"알 수 없음",c=d["카테고리"]||"",ic=IC[c]||"📦",sc=SC[s]||"s1";
+var fs=[["제품명",d["제품명"],d["모델명 / 사양"]],["위치",d["위치"]],["팀",d["팀"]],["사용자",d["사용자"]],["브랜드",d["제품 브랜드"]],["일련번호",d["일련번호"],0,1],["구매일",d["구매일"]]];
+var r="";
+for(var i=0;i<fs.length;i++){var f=fs[i],v=f[1]?e(String(f[1])):"—",cl="rv"+(f[3]?" m":"")+(!f[1]?" e":""),sb=f[2]&&!f[3]?'<div class="rs">'+e(String(f[2]))+"</div>":"";r+='<div class="rw"><span class="rl">'+f[0]+'</span><div style="text-align:right"><span class="'+cl+'">'+v+"</span>"+sb+"</div></div>"}
+document.getElementById("ra").innerHTML='<div class="cd"><div class="ch"><span class="bg '+sc+'">'+e(s)+'</span><div class="ct2">자산 관리번호</div><div class="ci">'+e(d["관리번호"])+'</div><div class="cc"><span style="font-size:20px">'+ic+"</span> "+e(c)+'</div></div><div class="cb">'+r+"</div></div>"}};
+var sc=document.createElement("script");
+sc.src=API+"?id="+encodeURIComponent(id)+"&callback="+cb;
+sc.onerror=function(){document.getElementById("ra").innerHTML='<div class="er"><div style="font-size:48px;margin-bottom:14px">⚠️</div><div style="font-size:16px;font-weight:700;color:#ff3b30">네트워크 오류</div><div style="font-size:13px;color:#ff6961">API 연결을 확인해 주세요</div></div>'};
+document.body.appendChild(sc)}
+document.getElementById("sf").addEventListener("submit",function(ev){ev.preventDefault();var id=document.getElementById("si").value.trim();if(id)lookup(id)});
+var p=new URLSearchParams(window.location.search),ii=p.get("id");
+if(ii){lookup(ii)}else{document.getElementById("ra").innerHTML='<div class="em"><div style="font-size:52px;margin-bottom:16px">📋</div><div style="font-size:17px;font-weight:700;margin-bottom:6px">자산 관리번호를 입력하세요</div><div style="font-size:14px;color:#8e8e93">QR 코드 스캔 또는 직접 입력으로 조회</div></div>'}
 </script>
 </body>
 </html>
