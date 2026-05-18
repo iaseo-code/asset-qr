@@ -107,7 +107,16 @@ function lookup(id){
   sc.onerror=function(){document.getElementById("ra").innerHTML='<div class="er"><div style="font-size:48px;margin-bottom:14px">⚠️</div><div style="font-size:16px;font-weight:700;color:#ff3b30">네트워크 오류</div><div style="font-size:13px;color:#ff6961">API 연결을 확인해 주세요</div></div>'};
   document.body.appendChild(sc);
 }
-document.getElementById("sf").addEventListener("submit",function(ev){ev.preventDefault();var id=document.getElementById("si").value.trim();if(id)lookup(id)});
+// 검색창 엔터 및 클릭 시 실행되는 안전한 코드
+var formEl = document.getElementById("sf");
+if (formEl) {
+    formEl.onsubmit = function(ev) {
+        ev.preventDefault(); // 새로고침 완벽 차단
+        var id = document.getElementById("si").value.trim();
+        if (id) lookup(id);
+        return false;
+    };
+}
 var p=new URLSearchParams(window.location.search),ii=p.get("id");
 if(ii){lookup(ii)}else{document.getElementById("ra").innerHTML='<div class="em"><div style="font-size:52px;margin-bottom:16px">📋</div><div style="font-size:17px;font-weight:700;margin-bottom:6px">자산 관리번호를 입력하세요</div><div style="font-size:14px;color:#8e8e93">QR 코드 스캔 또는 직접 입력으로 조회</div></div>'}
 </script>
