@@ -45,6 +45,8 @@ body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,sans-serif;backgr
 .ld{text-align:center;padding:48px}
 .sn{width:28px;height:28px;border-radius:50%;border:3px solid #e5e5ea;border-top-color:#1c1c1e;margin:0 auto 14px;animation:sp .7s linear infinite}
 .ft{text-align:center;margin-top:24px;font-size:11px;color:#c7c7cc}
+.lk-gen{text-align:center;margin-top:16px;animation:u .35s ease}
+.lk-gen a{display:inline-block;font-size:13px;color:#1c1c1e;text-decoration:none;font-weight:600;background:#e5e5ea;padding:10px 20px;border-radius:12px;}
 </style>
 </head>
 <body>
@@ -59,6 +61,7 @@ body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,sans-serif;backgr
 </form>
 <div id="ra"></div>
 <div class="ft">QR 코드를 스캔하면 자동으로 자산 정보가 조회됩니다</div>
+<div class="lk-gen"><a href="./generate.html">→ QR 코드 생성 가기</a></div>
 </div>
 <script>
 var API="https://script.google.com/macros/s/AKfycbwLiEY0-NadWWghpHVZyHk5qmK0Rwl9I7f_bpgXJJIs1YR4MjdjvCsxWt3qBw_YRreSJw/exec";
@@ -66,26 +69,37 @@ var IC={"아이맥(일체형)":"🖥️","모니터":"🖥️","노트북":"💻
 var SC={"사용":"s1","대기":"s2","폐기":"s3","매각":"s4"};
 function e(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
 function lookup(id){
-if(!id)return;
-document.getElementById("si").value=id;
-document.getElementById("ra").innerHTML='<div class="ld"><div class="sn"></div><div style="font-size:14px;color:#8e8e93">조회 중...</div></div>';
-var cb="_cb"+Date.now();
-window[cb]=function(d){
-delete window[cb];
-if(!d||d.error==="not_found"){
-document.getElementById("ra").innerHTML='<div class="er"><div style="font-size:48px;margin-bottom:14px">🔍</div><div style="font-size:16px;font-weight:700;color:#ff3b30;margin-bottom:4px">"'+e(id)+'" 자산을 찾을 수 없습니다</div><div style="font-size:13px;color:#ff6961">관리번호를 확인해 주세요</div></div>';
-}else if(d.error){
-document.getElementById("ra").innerHTML='<div class="er"><div style="font-size:48px;margin-bottom:14px">⚠️</div><div style="font-size:16px;font-weight:700;color:#ff3b30">'+e(d.error)+'</div></div>';
-}else{
-var s=d["상태"]||"알 수 없음",c=d["카테고리"]||"",ic=IC[c]||"📦",sc=SC[s]||"s1";
-var fs=[["제품명",d["제품명"],d["모델명 / 사양"]],["위치",d["위치"]],["팀",d["팀"]],["사용자",d["사용자"]],["브랜드",d["제품 브랜드"]],["일련번호",d["일련번호"],0,1],["구매일",d["구매일"]]];
-var r="";
-for(var i=0;i<fs.length;i++){var f=fs[i],v=f[1]?e(String(f[1])):"—",cl="rv"+(f[3]?" m":"")+(!f[1]?" e":""),sb=f[2]&&!f[3]?'<div class="rs">'+e(String(f[2]))+"</div>":"";r+='<div class="rw"><span class="rl">'+f[0]+'</span><div style="text-align:right"><span class="'+cl+'">'+v+"</span>"+sb+"</div></div>"}
-document.getElementById("ra").innerHTML='<div class="cd"><div class="ch"><span class="bg '+sc+'">'+e(s)+'</span><div class="ct2">자산 관리번호</div><div class="ci">'+e(d["관리번호"])+'</div><div class="cc"><span style="font-size:20px">'+ic+"</span> "+e(c)+'</div></div><div class="cb">'+r+"</div></div>"}};
-var sc=document.createElement("script");
-sc.src=API+"?id="+encodeURIComponent(id)+"&callback="+cb;
-sc.onerror=function(){document.getElementById("ra").innerHTML='<div class="er"><div style="font-size:48px;margin-bottom:14px">⚠️</div><div style="font-size:16px;font-weight:700;color:#ff3b30">네트워크 오류</div><div style="font-size:13px;color:#ff6961">API 연결을 확인해 주세요</div></div>'};
-document.body.appendChild(sc)}
+  if(!id)return;
+  document.getElementById("si").value=id;
+  document.getElementById("ra").innerHTML='<div class="ld"><div class="sn"></div><div style="font-size:14px;color:#8e8e93">조회 중...</div></div>';
+  var cb="_cb"+Date.now();
+  window[cb]=function(d){
+    delete window[cb];
+    if(!d||d.error==="not_found"){
+      document.getElementById("ra").innerHTML='<div class="er"><div style="font-size:48px;margin-bottom:14px">🔍</div><div style="font-size:16px;font-weight:700;color:#ff3b30;margin-bottom:4px">"'+e(id)+'" 자산을 찾을 수 없습니다</div><div style="font-size:13px;color:#ff6961">관리번호를 확인해 주세요</div></div>';
+    }else if(d.error){
+      document.getElementById("ra").innerHTML='<div class="er"><div style="font-size:48px;margin-bottom:14px">⚠️</div><div style="font-size:16px;font-weight:700;color:#ff3b30">'+e(d.error)+'</div></div>';
+    }else{
+      var s=d["상태"]||"알 수 없음",c=d["카테고리"]||"",ic=IC[c]||"📦",sc=SC[s]||"s1";
+      
+      // 1번 목표: 구매일 포맷 강제 변환 (T 기준 자르기)
+      var rawDate = d["구매일"];
+      var fDate = rawDate;
+      if (rawDate && typeof rawDate === 'string' && rawDate.indexOf('T') > -1) {
+          fDate = rawDate.split('T')[0];
+      }
+
+      var fs=[["제품명",d["제품명"],d["모델명 / 사양"]],["위치",d["위치"]],["팀",d["팀"]],["사용자",d["사용자"]],["브랜드",d["제품 브랜드"]],["일련번호",d["일련번호"],0,1],["구매일",fDate]];
+      var r="";
+      for(var i=0;i<fs.length;i++){var f=fs[i],v=f[1]?e(String(f[1])):"—",cl="rv"+(f[3]?" m":"")+(!f[1]?" e":""),sb=f[2]&&!f[3]?'<div class="rs">'+e(String(f[2]))+"</div>":"";r+='<div class="rw"><span class="rl">'+f[0]+'</span><div style="text-align:right"><span class="'+cl+'">'+v+"</span>"+sb+"</div></div>'}
+      document.getElementById("ra").innerHTML='<div class="cd"><div class="ch"><span class="bg '+sc+'">'+e(s)+'</span><div class="ct2">자산 관리번호</div><div class="ci">'+e(d["관리번호"])+'</div><div class="cc"><span style="font-size:20px">'+ic+"</span> "+e(c)+'</div></div><div class="cb">'+r+"</div></div>"
+    }
+  };
+  var sc=document.createElement("script");
+  sc.src=API+"?id="+encodeURIComponent(id)+"&callback="+cb;
+  sc.onerror=function(){document.getElementById("ra").innerHTML='<div class="er"><div style="font-size:48px;margin-bottom:14px">⚠️</div><div style="font-size:16px;font-weight:700;color:#ff3b30">네트워크 오류</div><div style="font-size:13px;color:#ff6961">API 연결을 확인해 주세요</div></div>'};
+  document.body.appendChild(sc);
+}
 document.getElementById("sf").addEventListener("submit",function(ev){ev.preventDefault();var id=document.getElementById("si").value.trim();if(id)lookup(id)});
 var p=new URLSearchParams(window.location.search),ii=p.get("id");
 if(ii){lookup(ii)}else{document.getElementById("ra").innerHTML='<div class="em"><div style="font-size:52px;margin-bottom:16px">📋</div><div style="font-size:17px;font-weight:700;margin-bottom:6px">자산 관리번호를 입력하세요</div><div style="font-size:14px;color:#8e8e93">QR 코드 스캔 또는 직접 입력으로 조회</div></div>'}
