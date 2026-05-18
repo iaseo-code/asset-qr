@@ -18,11 +18,12 @@ body{font-family:"Pretendard",-apple-system,sans-serif;background:#f2f2f7;color:
 .lb{font-size:14px;font-weight:700;margin-bottom:8px}
 .sub{font-size:12px;color:#8e8e93;margin-bottom:12px}
 textarea{width:100%;height:120px;padding:12px;border-radius:12px;border:2px solid #e5e5ea;font-size:13px;font-family:"SF Mono","Fira Code",monospace;resize:vertical;outline:none;-webkit-appearance:none}
-textarea:focus{border-color:#007aff}
+textarea:focus{border-color:#1c1c1e}
 .br{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 24px;border-radius:12px;border:none;font-weight:700;font-size:14px;cursor:pointer;font-family:"Pretendard",sans-serif;-webkit-appearance:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:12px;border:none;font-weight:700;font-size:14px;cursor:pointer;font-family:"Pretendard",sans-serif;-webkit-appearance:none}
 .btn:active{opacity:0.8}
-.bp{background:#007aff;color:#fff}
+/* 3번 목표: 검은색 버튼으로 변경 */
+.bp{background:#1c1c1e;color:#fff} 
 .bo{background:#fff;color:#1c1c1e;border:2px solid #e5e5ea}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:20px}
 .qi{background:#fff;border-radius:14px;padding:16px 12px;text-align:center;border:1px solid #e5e5ea;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
@@ -42,7 +43,7 @@ body{background:#fff}
 </head>
 <body>
 <div class="hd np">
-<div class="hd-b">🏭 피플팀 · 자산관리</div>
+<div class="hd-b">💻 피플팀 · 자산관리</div>
 <div class="hd-t">QR 코드 일괄 생성</div>
 <div class="hd-s">관리번호를 입력하면 인쇄용 QR 코드를 생성합니다</div>
 </div>
@@ -52,32 +53,81 @@ body{background:#fff}
 <div class="sub">줄바꿈 또는 쉼표로 구분 (예: EHD-25-01, EHD-25-02)</div>
 <textarea id="ids" placeholder="EHD-25-01&#10;EHD-25-02&#10;EHD-25-03"></textarea>
 <div class="br">
-<button class="btn bp" onclick="gen()">QR 코드 생성</button>
+<button class="btn bp" onclick="gen(false)">선택 QR 생성</button>
+<button class="btn bo" onclick="genAll()">전체 일괄 생성</button>
 <button class="btn bo" onclick="window.print()">🖨️ 인쇄</button>
 </div>
 </div>
 <div id="out"></div>
-<div class="lk np"><a href="./">← 자산 조회 페이지로 이동</a></div>
+<div class="lk np"><a href="./index.html">← 자산 조회 페이지로 이동</a></div>
 </div>
+
 <script>
+var API="https://script.google.com/macros/s/AKfycbwLiEY0-NadWWghpHVZyHk5qmK0Rwl9I7f_bpgXJJIs1YR4MjdjvCsxWt3qBw_YRreSJw/exec";
 var BASE="https://iaseo-code.github.io/asset-qr/";
-function gen(){
-var t=document.getElementById("ids").value;
-var ids=t.split(/[\n,]+/).map(function(s){return s.trim().toUpperCase()}).filter(Boolean);
-if(ids.length===0){alert("관리번호를 입력해 주세요.");return}
-var c=document.getElementById("out");
-c.innerHTML='<div class="grid"></div>';
-var g=c.querySelector(".grid");
-ids.forEach(function(id){
-var url=BASE+"?id="+encodeURIComponent(id);
-var qr=qrcode(0,"M");
-qr.addData(url);
-qr.make();
-var item=document.createElement("div");
-item.className="qi";
-item.innerHTML=qr.createSvgTag(3,0)+'<div class="ql">'+id+'</div>';
-g.appendChild(item)});
-c.innerHTML+='<div class="tip np"><strong>💡 인쇄 팁:</strong> Ctrl+P (또는 ⌘+P)로 인쇄하세요. USB용은 10~15mm 크기의 투명 라벨지에 출력하면 좋습니다. 방수 라미네이팅 처리 권장!</div>'}
+var validIds = [];
+var isLoaded = false;
+
+// 5번 목표 검증을 위해: 페이지 열릴 때 미리 시트의 모든 관리번호를 불러옵니다.
+window.onload = function() {
+    var cb="_cb"+Date.now();
+    window[cb]=function(d){
+        delete window[cb];
+        if(d && d.ids) {
+            validIds = d.ids;
+            isLoaded = true;
+        }
+    };
+    var sc=document.createElement("script");
+    sc.src=API+"?action=getAll&callback="+cb;
+    document.body.appendChild(sc);
+};
+
+// 4번 목표: 시트에 있는 모든 데이터의 QR을 한 번에 생성
+function genAll() {
+    if(!isLoaded) { alert("시트 데이터를 불러오는 중입니다. 잠시만 기다려주세요."); return; }
+    if(validIds.length === 0) { alert("시트에 자산 데이터가 없습니다."); return; }
+    document.getElementById("ids").value = validIds.join("\n");
+    gen(true);
+}
+
+// QR 생성 함수 (isAll: 전체 생성 여부)
+function gen(isAll){
+    if(!isLoaded) { alert("시트 데이터를 불러오는 중입니다. 잠시만 기다려주세요."); return; }
+    var t=document.getElementById("ids").value;
+    var ids=t.split(/[\n,]+/).map(function(s){return s.trim().toUpperCase()}).filter(Boolean);
+    if(ids.length===0){alert("관리번호를 입력해 주세요.");return;}
+    
+    var c=document.getElementById("out");
+    c.innerHTML='<div class="grid"></div>';
+    var g=c.querySelector(".grid");
+    
+    var notFound = [];
+    ids.forEach(function(id){
+        // 5번 목표: 시트에 번호가 없으면 생성하지 않고 제외 목록에 넣음
+        if(validIds.indexOf(id) === -1) {
+            notFound.push(id);
+            return; 
+        }
+        var url=BASE+"?id="+encodeURIComponent(id);
+        var qr=qrcode(0,"M");
+        qr.addData(url);
+        qr.make();
+        var item=document.createElement("div");
+        item.className="qi";
+        item.innerHTML=qr.createSvgTag(3,0)+'<div class="ql">'+id+'</div>';
+        g.appendChild(item);
+    });
+    
+    // 사용자가 직접 입력해서 생성할 때(전체 생성이 아닐 때), 없는 번호가 있었다면 알림
+    if(notFound.length > 0 && !isAll) {
+        alert("다음 관리번호는 시트에 존재하지 않아 생성이 취소되었습니다:\n" + notFound.join(", "));
+    }
+    
+    if(g.innerHTML !== "") {
+        c.innerHTML+='<div class="tip np"><strong>💡 인쇄 팁:</strong> Ctrl+P (또는 ⌘+P)로 인쇄하세요. USB용은 10~15mm 크기의 투명 라벨지에 출력하면 좋습니다. 방수 라미네이팅 처리 권장!</div>';
+    }
+}
 </script>
 </body>
 </html>
