@@ -82,11 +82,15 @@ function lookup(id){
     }else{
       var s=d["상태"]||"알 수 없음",c=d["카테고리"]||"",ic=IC[c]||"📦",sc=SC[s]||"s1";
       
-      // 1번 목표: 구매일 포맷 강제 변환 (T 기준 자르기)
+      // 💡 핵심 수정 부분: 9시간(밀리초 변환)을 강제로 더해서 한국 시간으로 되돌립니다!
       var rawDate = d["구매일"];
-      var fDate = rawDate;
+      var fDate = rawDate || "—";
       if (rawDate && typeof rawDate === 'string' && rawDate.indexOf('T') > -1) {
-          fDate = rawDate.split('T')[0];
+          var dt = new Date(rawDate);
+          if (!isNaN(dt.getTime())) {
+              var kstDate = new Date(dt.getTime() + (9 * 60 * 60 * 1000));
+              fDate = kstDate.toISOString().split('T')[0];
+          }
       }
 
       var fs=[["제품명",d["제품명"],d["모델명 / 사양"]],["위치",d["위치"]],["팀",d["팀"]],["사용자",d["사용자"]],["브랜드",d["제품 브랜드"]],["일련번호",d["일련번호"],0,1],["구매일",fDate]];
