@@ -63,12 +63,27 @@ body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,sans-serif;backgr
 <div class="ft">QR 코드를 스캔하면 자동으로 자산 정보가 조회됩니다</div>
 <div class="lk"><a href="./generate.html">QR 코드 일괄 생성 페이지로 이동 →</a></div>
 </div>
+
 <script>
-// 🚨 [주의] 아래 큰따옴표("") 사이에 본인의 최신 웹 앱 URL(/exec)을 붙여넣으세요! 🚨
-// 절대 큰따옴표를 지우시면 안 됩니다!!
+window.onerror = function(msg, url, line) {
+  var ra = document.getElementById("ra");
+  if(ra) {
+    ra.innerHTML = '<div style="background:#fef2f2; padding:20px; border-radius:16px; border:2px solid #fca5a5; color:#991b1b; text-align:left; animation:u .35s ease">' +
+                   '<h3 style="font-size:16px; margin-bottom:8px">🚨 코드 에러 감지!</h3>' +
+                   '<p style="font-size:13px; font-weight:600; margin-bottom:4px;">원인: ' + msg + '</p>' +
+                   '<p style="font-size:12px; color:#ef4444;">위치: ' + line + '번째 줄</p>' +
+                   '<p style="font-size:12px; color:#6b7280; margin-top:12px; border-top:1px dashed #fca5a5; padding-top:8px;">💡 주로 <b>var API = "주소";</b> 부분에 주소를 붙여넣다가 따옴표(")가 지워졌거나 주소가 다음 줄로 밀렸을 때 발생합니다.</p>' +
+                   '</div>';
+  }
+  return false;
+};
+</script>
+
+<script>
+// 🚨 아래 큰따옴표("") 사이에 본인의 최신 웹 앱 URL(/exec)을 붙여넣으세요!
 var API = "https://script.google.com/macros/s/AKfycbyQxzWNkmlwfOm5MTuUoO6dqUGMPImUITJql3Wb9eBNGbQvxe1v4TFSFvVei4n_DGfM9g/exec";
 
-var IC={"아이맥(일체형)":"🖥️","모니터":"🖥️","노트북":"💻","데스크탑":"🖥️","맥북":"💻","맥스튜디오":"⬛","맥디스플레이":"🖥️","외장하드":"💾","핸드폰":"📱","태블릿":"📱","카메라":"📷"};
+var IC={"아이맥(일체형)":"🖥️","모니터":"🖥️","노트북":"💻","데스크탑":"🖥️","맥북":"💻","맥스튜디오":"⬛","맥디스플레이":"🖥️","외장하드":"💾","핸드폰":"📱","태블릿":"📋","카메라":"📷"};
 var SC={"사용":"s1","대기":"s2","폐기":"s3","매각":"s4"};
 function e(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
 function lookup(id){
@@ -95,7 +110,7 @@ function lookup(id){
       }
       var fs=[["제품명",d["제품명"],d["모델명 / 사양"]],["위치",d["위치"]],["팀",d["팀"]],["사용자",d["사용자"]],["브랜드",d["제품 브랜드"]],["일련번호",d["일련번호"],0,1],["구매일",fDate]];
       var r="";
-      for(var i=0;i<fs.length;i++){var f=fs[i],v=f[1]?e(String(f[1])):"—",cl="rv"+(f[3]?" m":"")+(!f[1]?" e":""),sb=f[2]&&!f[3]?'<div class="rs">'+e(String(f[2]))+"</div>":"";r+='<div class="rw"><span class="rl">'+f[0]+'</span><div style="text-align:right"><span class="'+cl+'">'+v+"</span>"+sb+"</div></div>'}
+      for(var i=0;i<fs.length;i++){var f=fs[i],v=f[1]?e(String(f[1])):"—",cl="rv"+(f[3]?" m":"")+(!f[1]?" e":""),sb=f[2]&&!f[3]?'<div class="rs">'+e(String(f[2]))+"</div>":"";r+='<div class="rw"><span class="rl">'+f[0]+'</span><div style="text-align:right"><span class="'+cl+'">'+v+"</span>"+sb+"</div></div>"}
       document.getElementById("ra").innerHTML='<div class="cd"><div class="ch"><span class="bg '+sc+'">'+e(s)+'</span><div class="ct2">자산 관리번호</div><div class="ci">'+e(d["관리번호"])+'</div><div class="cc"><span style="font-size:20px">'+ic+"</span> "+e(c)+'</div></div><div class="cb">'+r+"</div></div>"
     }
   };
@@ -105,7 +120,7 @@ function lookup(id){
   document.body.appendChild(sc);
 }
 
-// 👇 폼 제출(엔터/클릭)을 감지하는 안전한 코드 
+// 폼 이벤트 바인딩
 var formEl = document.getElementById("sf");
 if (formEl) {
     formEl.onsubmit = function(ev) {
@@ -115,6 +130,7 @@ if (formEl) {
         return false;
     };
 }
+
 var p=new URLSearchParams(window.location.search),ii=p.get("id");
 if(ii){lookup(ii)}else{document.getElementById("ra").innerHTML='<div class="em"><div style="font-size:52px;margin-bottom:16px">📋</div><div style="font-size:17px;font-weight:700;margin-bottom:6px">자산 관리번호를 입력하세요</div><div style="font-size:14px;color:#8e8e93">QR 코드 스캔 또는 직접 입력으로 조회</div></div>'}
 </script>
