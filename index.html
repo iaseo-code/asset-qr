@@ -45,13 +45,15 @@ body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,sans-serif;backgr
 .ld{text-align:center;padding:48px}
 .sn{width:28px;height:28px;border-radius:50%;border:3px solid #e5e5ea;border-top-color:#1c1c1e;margin:0 auto 14px;animation:sp .7s linear infinite}
 .ft{text-align:center;margin-top:24px;font-size:11px;color:#c7c7cc}
-.lk-gen{text-align:center;margin-top:16px;animation:u .35s ease}
-.lk-gen a{display:inline-block;font-size:13px;color:#1c1c1e;text-decoration:none;font-weight:600;background:#e5e5ea;padding:10px 20px;border-radius:12px;}
+
+/* 👇 디자인이 통일된 링크 부분입니다 */
+.lk{margin-top:16px;text-align:center;animation:u .35s ease}
+.lk a{font-size:13px;color:#007aff;text-decoration:none;font-weight:600}
 </style>
 </head>
 <body>
 <div class="hd">
-<div class="hd-b">💻 피플팀 · 자산관리</div>
+<div class="hd-b">📱 피플팀 · 자산관리</div>
 <div class="hd-t">자산 정보 조회</div>
 </div>
 <div class="ct">
@@ -61,11 +63,13 @@ body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,sans-serif;backgr
 </form>
 <div id="ra"></div>
 <div class="ft">QR 코드를 스캔하면 자동으로 자산 정보가 조회됩니다</div>
-<div class="lk np"><a href="./generate.html">← QR 코드 생성 페이지로 이동</a></div>
+<div class="lk"><a href="./generate.html">QR 코드 일괄 생성 페이지로 이동 →</a></div>
 </div>
 <script>
+// 🚨 여기에 본인의 실제 구글 API 주소(/exec로 끝나는 주소)를 반드시 다시 넣어주세요!
 var API="https://script.google.com/macros/s/AKfycbyQxzWNkmlwfOm5MTuUoO6dqUGMPImUITJql3Wb9eBNGbQvxe1v4TFSFvVei4n_DGfM9g/exec";
-var IC={"아이맥(일체형)":"🖥️","모니터":"🖥️","노트북":"💻","데스크탑":"🖥️","맥북":"💻","맥스튜디오":"⬛","맥디스플레이":"🖥️","외장하드":"💾","핸드폰":"📱","태블릿":"📱","카메라":"📷"};
+
+var IC={"아이맥(일체형)":"🖥️","모니터":"🖥️","노트북":"💻","데스크탑":"🖥️","맥북":"💻","맥스튜디오":"⬛","맥디스플레이":"🖥️","외장하드":"💾","핸드폰":"📱","태블릿":"📋","카메라":"📷"};
 var SC={"사용":"s1","대기":"s2","폐기":"s3","매각":"s4"};
 function e(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
 function lookup(id){
@@ -82,7 +86,6 @@ function lookup(id){
     }else{
       var s=d["상태"]||"알 수 없음",c=d["카테고리"]||"",ic=IC[c]||"📦",sc=SC[s]||"s1";
       
-      // 💡 핵심 수정 부분: 9시간(밀리초 변환)을 강제로 더해서 한국 시간으로 되돌립니다!
       var rawDate = d["구매일"];
       var fDate = rawDate || "—";
       if (rawDate && typeof rawDate === 'string' && rawDate.indexOf('T') > -1) {
