@@ -41,10 +41,10 @@ textarea:focus{border-color:#1c1c1e}
   .grid{grid-template-columns:repeat(12, 1fr); gap:0px}
   
   /* 2. 테두리와 여백도 최소화합니다 */
-  .qi{border:1px dashed #ccc; padding:1mm; break-inside:avoid; width:15mm; height:18mm; border-radius:0}
+.qi{border:1px dashed #ccc; padding:0; break-inside:avoid; width:15mm; height:18mm; border-radius:0; display:flex; flex-direction:column; align-items:center; justify-content:center}
   
   /* 3. 💡 핵심: QR 코드 그림 자체의 크기를 물리적 크기(12mm)로 강제 고정합니다! */
- .qi svg{display:block; width:13mm; height:13mm; margin:0 auto 0.5mm}
+ .qi svg{display:block; width:13mm; height:13mm; margin:0 auto 0.5mm; overflow:hidden}
   
   /* 4. 관리번호 글씨도 QR 크기에 맞춰서 아주 작게 줄입니다 */
  .ql{font-size:7pt; letter-spacing:-0.5px}
