@@ -6,6 +6,7 @@
 <title>QR 코드 생성 - 자산 관리</title>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:"Pretendard",-apple-system,sans-serif;background:#f2f2f7;color:#1c1c1e;min-height:100vh}
@@ -65,6 +66,7 @@ textarea:focus{border-color:#1c1c1e}
 <button class="btn bp" onclick="gen(false)">선택 QR 생성</button>
 <button class="btn bo" onclick="genAll()">전체 일괄 생성</button>
 <button class="btn bo" onclick="window.print()">🖨️ 인쇄</button>
+<button class="btn bo" onclick="downloadAll()">📥 이미지 다운로드</button>
 </div>
 </div>
 <div id="out"></div>
@@ -137,6 +139,49 @@ function gen(isAll){
         c.innerHTML+='<div class="tip np"><strong>💡 인쇄 팁:</strong> Ctrl+P (또는 ⌘+P)로 인쇄하세요. USB용은 10~15mm 크기의 투명 라벨지에 출력하면 좋습니다. 방수 라미네이팅 처리 권장!</div>';
     }
 }
+ function downloadAll(){
+var items=document.querySelectorAll(".qi");
+if(items.length===0){alert("먼저 QR 코드를 생성해 주세요.");return;}
+var zip=new JSZip();
+var done=0;
+var total=items.length;
+items.forEach(function(item){
+var svg=item.querySelector("svg");
+var label=item.querySelector(".ql").textContent.trim();
+var svgData=new XMLSerializer().serializeToString(svg);
+var canvas=document.createElement("canvas");
+canvas.width=400;canvas.height=400;
+var ctx=canvas.getContext("2d");
+var img=new Image();
+img.onload=function(){
+ctx.fillStyle="#ffffff";
+ctx.fillRect(0,0,400,400);
+ctx.drawImage(img,0,0,400,400);
+ctx.fillStyle="#000000";
+ctx.font="bold 24px Pretendard,sans-serif";
+ctx.textAlign="center";
+canvas.height=440;
+ctx.fillStyle="#ffffff";
+ctx.fillRect(0,0,400,440);
+ctx.drawImage(img,10,10,380,380);
+ctx.fillStyle="#000000";
+ctx.font="bold 22px Pretendard,sans-serif";
+ctx.textAlign="center";
+ctx.fillText(label,200,425);
+canvas.toBlob(function(blob){
+zip.file(label+".png",blob);
+done++;
+if(done===total){
+zip.generateAsync({type:"blob"}).then(function(content){
+var a=document.createElement("a");
+a.href=URL.createObjectURL(content);
+a.download="QR_codes.zip";
+a.click();
+});}
+},"image/png");};
+img.src="data:image/svg+xml;base64,"+btoa(unescape(encodeURIComponent(svgData)));
+});
+} 
 </script>
 </body>
 </html>
